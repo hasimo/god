@@ -53,4 +53,17 @@ class TestConditionsDiskUsage < Test::Unit::TestCase
     
     assert_equal false, c.test
   end
+
+  def test_df_should_return_integer
+    c = Conditions::DiskUsage.new
+    c.above = 0
+    c.mount_point = '/'
+
+    c.expects(:`).with(){ |command| 
+      usage = `#{command}` 
+      usage =~ /^\d*$/
+    }
+    c.test
+  end
+   
 end
